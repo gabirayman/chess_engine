@@ -34,6 +34,13 @@ namespace chess
         return 1ULL << static_cast<unsigned>(sq);
     }
 
+    inline constexpr Square getSquare(U64 bitboard) {
+        if (bitboard == 0 || (bitboard & (bitboard - 1)) != 0) { // checks that bitboar is not zero and has exactly one bit set
+            throw std::invalid_argument("bitboard must have atleast one and only one bit set");
+        }
+        return static_cast<Square>(__builtin_ctzll(bitboard));
+    }
+
     inline constexpr U64 FILE_A = 0x0101010101010101ULL;
     inline constexpr U64 FILE_H = 0x8080808080808080ULL;
     inline constexpr U64 RANK_1 = 0x00000000000000FFULL;

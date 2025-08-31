@@ -130,4 +130,15 @@ void Board::applyMove(const Move& move) {
     recompute();
 }
 
+// vector<Move> Board::generateMoves() const {
+//     std::vector<Move> moves;
+//     for (int p = 0; p < PIECE_N; ++p) {
+//         U64 pieces = bb[sideToMove][p];
+//         while (pieces) {
+//             int piece = pieces & -pieces; // get lowest set bit
+
+//         }
+//     }
+// }
+
 } // namespace chess

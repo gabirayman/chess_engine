@@ -47,6 +47,16 @@ struct Board {
     // generate legal moves returns a vector of Move
     std::vector<Move> generateMoves() const;
 
+    void genPawnMoves  (std::vector<Move>&, U64, int, Color, const Board&);
+    void genKnightMoves(std::vector<Move>&, U64, int, Color, const Board&);
+    void genBishopMoves(std::vector<Move>&, U64, int, Color, const Board&);
+    void genRookMoves  (std::vector<Move>&, U64, int, Color, const Board&);
+    void genQueenMoves (std::vector<Move>&, U64, int, Color, const Board&);
+    void genKingMoves  (std::vector<Move>&, U64, int, Color, const Board&);
+
+    // TODO figure out where to put function vector which holds these functions.
+
+
 };
 
 
