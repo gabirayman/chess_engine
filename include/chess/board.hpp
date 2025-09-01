@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-#include "types.hpp"
+#include "defs.hpp"
 #include "move.hpp"
 
 namespace chess {
@@ -14,7 +14,8 @@ struct Board {
     Color sideToMove {WHITE};
 
     uint8_t castling = CR_WK | CR_WQ | CR_BK | CR_BQ; // start: all rights available
-    U64 epTarget = 0;     
+    U64 epTarget = 0;
+
 
     inline bool hasEP() const { return epTarget; }
     inline bool hasWK() const { return (castling & CR_WK); }
@@ -36,29 +37,45 @@ struct Board {
 
     void applyMove(const Move& move);
 
+    Board applied(const Move& move) const;
+
     // void undoMove();
     
-    bool canCastle() const;
+    bool canCastleKingSide(Color c) const;
+
+    bool canCastleQueenSide(Color c) const;
 
     bool isSquareAttacked(Square sq, Color by) const;
 
-    // bool isInCheck() const;
+    bool makesCheck(Move move, Color enemyColor) const;
+
+    static void push_promos(std::vector<Move>& moves, int from, int to, U16 baseFlags);
 
     // generate legal moves returns a vector of Move
     std::vector<Move> generateMoves() const;
 
-    void genPawnMoves  (std::vector<Move>&, U64, int, Color, const Board&);
-    void genKnightMoves(std::vector<Move>&, U64, int, Color, const Board&);
-    void genBishopMoves(std::vector<Move>&, U64, int, Color, const Board&);
-    void genRookMoves  (std::vector<Move>&, U64, int, Color, const Board&);
-    void genQueenMoves (std::vector<Move>&, U64, int, Color, const Board&);
-    void genKingMoves  (std::vector<Move>&, U64, int, Color, const Board&);
+    static void genPawnMoves  (std::vector<Move>&, U64, int, Color, const Board&);
+    static void genKnightMoves(std::vector<Move>&, U64, int, Color, const Board&);
+    static void genBishopMoves(std::vector<Move>&, U64, int, Color, const Board&);
+    static void genRookMoves  (std::vector<Move>&, U64, int, Color, const Board&);
+    static void genQueenMoves (std::vector<Move>&, U64, int, Color, const Board&);
+    static void genKingMoves  (std::vector<Move>&, U64, int, Color, const Board&);
 
-    // TODO figure out where to put function vector which holds these functions.
+    static void genDiagonalMoves(std::vector<Move>&, U64, int, Color, const Board&, Piece piece);
+    static void genStraightMoves(std::vector<Move>&, U64, int, Color, const Board&, Piece piece);    
 
 
 };
 
+// array of pointers that exists outside of the class so it will not be re-created for each instance of Board
+inline constexpr void (pieceFunctionArray[PIECE_N])(std::vector<Move>&, U64, int, Color, const Board&) = {
+    &Board::genPawnMoves,
+    &Board::genKnightMoves,
+    &Board::genBishopMoves,
+    &Board::genRookMoves,
+    &Board::genQueenMoves,
+    &Board::genKingMoves
+};
 
 
 } // namespace chess
