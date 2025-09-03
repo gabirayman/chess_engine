@@ -7,18 +7,21 @@ namespace chess
     inline constexpr U16 MF_None       = 0;
     inline constexpr U16 MF_Capture    = 1u << 0;
     inline constexpr U16 MF_DoublePush = 1u << 1;
-    inline constexpr U16 MF_EnPassant  = 1u << 2;
-    inline constexpr U16 MF_CastleK    = 1u << 3;
-    inline constexpr U16 MF_CastleQ    = 1u << 4;
-    inline constexpr U16 MF_PromoQ     = 1u << 5;
-    inline constexpr U16 MF_PromoR     = 1u << 6;
-    inline constexpr U16 MF_PromoB     = 1u << 7;
-    inline constexpr U16 MF_PromoN     = 1u << 8;
+    inline constexpr U16 MF_CastleK    = 1u << 2;
+    inline constexpr U16 MF_CastleQ    = 1u << 3;
+    inline constexpr U16 MF_PromoQ     = 1u << 4;
+    inline constexpr U16 MF_PromoR     = 1u << 5;
+    inline constexpr U16 MF_PromoB     = 1u << 6;
+    inline constexpr U16 MF_PromoN     = 1u << 7;
+    inline constexpr U16 MF_EnPassant  = 1u << 8;
+
+    inline constexpr U16 MF_PromoMask = MF_PromoQ | MF_PromoR | MF_PromoB | MF_PromoN;
+
 
     struct Move {
         uint8_t from;
         uint8_t to;
-        U16 flags;      // bitwise | of flags
+        U16 flags;      // | of flags
         Piece piece;   // piece moving
         
         // if we want undo functionality, we can add:

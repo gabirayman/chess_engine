@@ -1,26 +1,5 @@
-when a double move is made, in the apply move or applied function, check if an enemy pawn is to the right or left of the doubled pawn, and then turn on the enpassaunt flag.
-think how to handle enpassant flag in general and who is in charge of tunring off ect.
-
-when applying moves, remember to check if rook moves from its home square to toggle off castleing rights for that side. same for king moves, to remove king casteling rights for both sides.
-
-define these:
-    bool canCastle() const; (decide what this checks and what we should check in the function)
-
-    bool isSquareAttacked(Square sq, Color by) const;
-    see if we need here a helper genAttackMoves() which will generate only attacking moves and not forward pawn moves ect.
-
-    bool makesCheck(Move move, Color enemyColor) const;
-
-then define:
-    void applyMove(const Move& move);
-
-    Board applied(const Move& move);
-
-test out the functions till now in main
-
-
 restructure a bit:
-nclude/chess/
+include/chess/
   defs.hpp          // enums (Color, Piece, Square), fixed-size aliases (U64), helper macros
   bitboard.hpp      // FILE_*, RANK_*, BB(sq), other pure bitboard helpers
   attacks.hpp       // precomputed attack tables (KNIGHT/ KING / rays if you add them)
@@ -28,9 +7,14 @@ nclude/chess/
   movegen.hpp       // decls for per-piece generators + function array
   board.hpp         // Board class: state, recompute(), apply/applied(), isSquareAttacked()
   debug.hpp         // printBB/printBoard
+  fen.hpp
 
 src/
   board.cpp
   movegen.cpp       // define the single dispatch table + generator bodies (if not header-only)
   // I think all in header attacks.cpp       // only if you don’t keep them constexpr in header
   debug.cpp         // printing 
+  fen.cpp
+
+
+make eval() function!

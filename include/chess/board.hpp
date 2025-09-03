@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <vector> 
 #include "defs.hpp"
 #include "move.hpp"
 
@@ -14,6 +15,8 @@ struct Board {
     Color sideToMove {WHITE};
 
     uint8_t castling = CR_WK | CR_WQ | CR_BK | CR_BQ; // start: all rights available
+    int  halfmoveClock = 0;
+    int  fullmoveNumber = 1;
     U64 epTarget = 0;
 
 
@@ -31,10 +34,6 @@ struct Board {
     Piece pieceOn(int sq, Color c) const;
     Piece pieceOn(Square sq, Color c) const;
 
-    static void printBB(U64 bitBoard);
-
-    void printBoard() const;
-
     void applyMove(const Move& move);
 
     Board applied(const Move& move) const;
@@ -47,12 +46,14 @@ struct Board {
 
     bool isSquareAttacked(Square sq, Color by) const;
 
-    bool makesCheck(Move move, Color enemyColor) const;
+    bool isInCheck(Color c) const;
+    bool isInCheck() const; // uses sideToMove
 
     static void push_promos(std::vector<Move>& moves, int from, int to, U16 baseFlags);
 
     // generate legal moves returns a vector of Move
     std::vector<Move> generateMoves() const;
+    std::vector<Move> generateLegalMoves() const;
 
     static void genPawnMoves  (std::vector<Move>&, U64, int, Color, const Board&);
     static void genKnightMoves(std::vector<Move>&, U64, int, Color, const Board&);
@@ -62,13 +63,16 @@ struct Board {
     static void genKingMoves  (std::vector<Move>&, U64, int, Color, const Board&);
 
     static void genDiagonalMoves(std::vector<Move>&, U64, int, Color, const Board&, Piece piece);
-    static void genStraightMoves(std::vector<Move>&, U64, int, Color, const Board&, Piece piece);    
+    static void genStraightMoves(std::vector<Move>&, U64, int, Color, const Board&, Piece piece);
 
 
 };
 
 // array of pointers that exists outside of the class so it will not be re-created for each instance of Board
-inline constexpr void (pieceFunctionArray[PIECE_N])(std::vector<Move>&, U64, int, Color, const Board&) = {
+
+using MoveGenFn = void (*)(std::vector<Move>&, U64, int, Color, const Board&);
+
+inline constexpr std::array<MoveGenFn, PIECE_N> pieceFunctionArray = {
     &Board::genPawnMoves,
     &Board::genKnightMoves,
     &Board::genBishopMoves,
