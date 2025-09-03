@@ -661,6 +661,9 @@ void Board::genPawnMoves(std::vector<Move>& moves, U64 pawnBB, int sq, Color c, 
 }
 
 void Board::genKnightMoves(std::vector<Move>& moves, U64 knightBB, int sq, Color c, const Board& board) {
+    // to get rid of unused variable warning
+    (void)knightBB;
+
     const U64 own = board.occ[c];
 
     // original computing knight attacks every time
@@ -834,6 +837,9 @@ void Board::genQueenMoves(std::vector<Move>& moves, U64 queenBB, int sq, Color c
 }
 
 void Board::genKingMoves(std::vector<Move>& moves, U64 kingBB, int sq, Color c, const Board& board) {
+    // to get rid of unused variable warning
+    (void)kingBB;
+
     const U64 own = board.occ[c];
 
     U64 targets = KING_ATTACK_TARGETS[sq] & ~own;
