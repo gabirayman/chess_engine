@@ -49,6 +49,11 @@ struct Board {
     bool isInCheck(Color c) const;
     bool isInCheck() const; // uses sideToMove
 
+    bool hasLegalMove() const;
+    bool isCheckmate() const;
+    bool isStalemate() const;
+    GameState state() const;
+
     static void push_promos(std::vector<Move>& moves, int from, int to, U16 baseFlags);
 
     // generate legal moves returns a vector of Move

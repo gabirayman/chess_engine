@@ -433,6 +433,38 @@ std::vector<Move> Board::generateLegalMoves() const {
     return legal;
 }
 
+bool Board::hasLegalMove() const {
+    auto pseudo = generateMoves();
+    const Color us = sideToMove;
+
+    for (const Move& m : pseudo) {
+        Board newBoard = *this;
+        newBoard.applyMove(m);
+        if (!newBoard.isInCheck(us)) {
+            return true; 
+        }
+    }
+    return false; 
+}
+
+bool Board::isCheckmate() const {
+    return isInCheck(sideToMove) && !hasLegalMove();
+}
+
+bool Board::isStalemate() const {
+    return !isInCheck(sideToMove) && !hasLegalMove();
+}
+
+GameState Board::state() const {
+    if (isCheckmate()) {
+        return CHECKMATE;
+    } else if (isStalemate()) {
+        return STALEMATE;
+    } else {
+        return PLAYING;
+    }
+}
+
 void Board::push_promos(std::vector<Move>& moves, int from, int to, U16 baseFlags) {
     Move moveQ;
     moveQ.from = from;

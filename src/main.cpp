@@ -63,23 +63,21 @@ int main(int argc, char** argv) {
     const Color us   = b.sideToMove;
     const Color them = other(us);
 
-    std::vector<Move> legal;
-    auto pseudo = b.generateMoves();
-    legal.reserve(pseudo.size());
-
-    for (const Move& m : pseudo) {
-        Board child = b.applied(m);
-
-        int ksqAfter = (m.piece == KING)
-            ? m.to
-            : static_cast<int>(getSquare(child.bb[us][KING]));
-        if (!child.isSquareAttacked(static_cast<Square>(ksqAfter), them)) {
-            legal.push_back(m);
-        }
+    if (b.state() != PLAYING) {
+        std::cout << "Game over: ";
+        if (b.state() == CHECKMATE){
+            std::cout << "Checkmate, " << (them == WHITE ? "White" : "Black") << " wins.\n";
+        } else if (b.state() == STALEMATE) {
+            std::cout << "Stalemate, draw.\n";
+        } 
+        return 0;
     }
 
+    std::vector<Move> legal;
+    legal = b.generateLegalMoves();
+
     std::cout << "Side to move: " << (us == WHITE ? "White" : "Black") << "\n";
-    std::cout << "Legal moves: " << legal.size() << "\n\n";
+
 
     // Print all legal moves and resulting boards
     int idx = 1;

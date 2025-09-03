@@ -11,6 +11,8 @@ namespace chess
     enum Color : uint8_t { WHITE = 0, BLACK = 1, COLOR_N = 2 };
     enum Piece : uint8_t { PAWN = 0, KNIGHT, BISHOP, ROOK, QUEEN, KING, PIECE_N = 6 };
 
+    enum GameState : uint8_t { PLAYING = 0, CHECKMATE = 1, STALEMATE = 2 };
+
     // Returns the opposite color
     inline constexpr Color other(Color c) { return c == WHITE ? BLACK : WHITE; }
 
