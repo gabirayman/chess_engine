@@ -21,7 +21,7 @@ static std::string sqToStr(int sq) {
 static void printMove(const Move& m) {
     std::cout << sqToStr(m.from) << sqToStr(m.to);
 
-    // flags (simple, human-friendly)
+    // flags
     if (has(m.flags, MF_CastleK)) std::cout << " (O-O)";
     else if (has(m.flags, MF_CastleQ)) std::cout << " (O-O-O)";
     else {
@@ -35,7 +35,7 @@ static void printMove(const Move& m) {
 }
 
 int main(int argc, char** argv) {
-    // 1) Get FEN (argv or stdin; empty = startpos)
+    // Get FEN (argv or stdin; empty = startpos)
     std::string fen;
     if (argc > 1) {
         std::ostringstream oss;
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
     }
     if (fen.empty()) fen = std::string(STARTPOS_FEN);
 
-    // 2) Build board from FEN
+    // Build board from FEN
     Board b;
     if (!setFromFEN(b, fen)) {
         std::cerr << "Invalid FEN.\n";
@@ -60,7 +60,6 @@ int main(int argc, char** argv) {
     std::cout << "\nInitial position:\n";
     printBoard(b);
 
-    // 3) Generate pseudo moves and filter to legal here
     const Color us   = b.sideToMove;
     const Color them = other(us);
 
@@ -69,8 +68,8 @@ int main(int argc, char** argv) {
     legal.reserve(pseudo.size());
 
     for (const Move& m : pseudo) {
-        Board child = b.applied(m); // unchecked apply (flips side, updates occ)
-        // our king square after the move:
+        Board child = b.applied(m);
+
         int ksqAfter = (m.piece == KING)
             ? m.to
             : static_cast<int>(getSquare(child.bb[us][KING]));
@@ -82,7 +81,7 @@ int main(int argc, char** argv) {
     std::cout << "Side to move: " << (us == WHITE ? "White" : "Black") << "\n";
     std::cout << "Legal moves: " << legal.size() << "\n\n";
 
-    // 4) Print all legal moves and resulting boards
+    // Print all legal moves and resulting boards
     int idx = 1;
     for (const Move& m : legal) {
         std::cout << "#" << idx++ << " ";
